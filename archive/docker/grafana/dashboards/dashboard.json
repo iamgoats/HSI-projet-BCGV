@@ -1,0 +1,1910 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 1,
+        "x": 1,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<img src=\"https://www.jiffylubesocal.com/wp-content/uploads/2016/10/gas-dash-light.jpg\" alt=\"fuel_icon\" width=\"200\"/>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "10.1.5",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Vitesse",
+          "mappings": [],
+          "max": 255,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "super-light-blue",
+                "value": null
+              },
+              {
+                "color": "super-light-blue",
+                "value": 0
+              },
+              {
+                "color": "light-blue",
+                "value": 20
+              },
+              {
+                "color": "blue",
+                "value": 40
+              },
+              {
+                "color": "semi-dark-blue",
+                "value": 60
+              },
+              {
+                "color": "dark-blue",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "velocitykmh"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 15,
+        "x": 3,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P951FEA4DE68E13C5"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "speed"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "km"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P951FEA4DE68E13C5"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "km"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Fuel",
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 25
+              },
+              {
+                "color": "super-light-yellow",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 3,
+        "x": 0,
+        "y": 2
+      },
+      "id": 4,
+      "options": {
+        "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 10,
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P951FEA4DE68E13C5"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "fuel"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Tours moteur",
+          "mappings": [],
+          "max": 6000,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 40
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "t/min"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 18,
+        "y": 3
+      },
+      "id": 2,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P951FEA4DE68E13C5"
+          },
+          "groupBy": [],
+          "limit": "1",
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "engine_speed"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 17,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<h1 style=\"text-align: center;\">Etat des feux</h1> ",
+        "mode": "html"
+      },
+      "pluginVersion": "10.1.5",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 12,
+        "x": 12,
+        "y": 11
+      },
+      "id": 18,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<h1 style=\"text-align: center;\">Voyants</h1> ",
+        "mode": "html"
+      },
+      "pluginVersion": "10.1.5",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "transparent",
+                  "index": 0
+                },
+                "1": {
+                  "color": "blue",
+                  "index": 1
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.feu_clign_g"
+            },
+            "properties": [
+              {
+                "id": "links"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.feu_clign_d"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.feu_route"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "yellow",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.feu_pos"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "light-blue",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "id": 24,
+      "options": {
+        "inlineEditing": true,
+        "root": {
+          "background": {
+            "color": {
+              "fixed": "transparent"
+            },
+            "image": {
+              "fixed": "",
+              "mode": "fixed"
+            }
+          },
+          "border": {
+            "color": {
+              "fixed": "dark-green"
+            }
+          },
+          "constraint": {
+            "horizontal": "left",
+            "vertical": "top"
+          },
+          "elements": [
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.feu_clign_g",
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "fixed": "img/icons/unicons/arrow-left.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "ClignoG",
+              "placement": {
+                "height": 100,
+                "left": 0,
+                "top": 0,
+                "width": 100
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.feu_clign_d",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": ""
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                },
+                "width": 0
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "fixed": "img/icons/unicons/arrow-right.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "ClignoD",
+              "placement": {
+                "height": 100,
+                "left": 100,
+                "top": 0,
+                "width": 100
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "align": "center",
+                "color": {
+                  "fixed": "rgb(204, 204, 220)"
+                },
+                "size": 16,
+                "text": {
+                  "fixed": "Feux"
+                },
+                "valign": "middle"
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Element 3",
+              "placement": {
+                "height": 50,
+                "left": 416,
+                "top": 1,
+                "width": 100
+              },
+              "type": "text"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                },
+                "width": 0
+              },
+              "config": {
+                "fill": {
+                  "field": "mqtt_consumer.feu_pos",
+                  "fixed": "transparent"
+                },
+                "path": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                }
+              },
+              "connections": [],
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "pos1",
+              "placement": {
+                "height": 30,
+                "left": 395,
+                "top": 55,
+                "width": 30
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "field": "mqtt_consumer.feu_pos",
+                  "fixed": "transparent"
+                },
+                "path": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                }
+              },
+              "connections": [],
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "pos2",
+              "placement": {
+                "height": 30,
+                "left": 500,
+                "top": 55,
+                "width": 30
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                },
+                "width": 0
+              },
+              "config": {
+                "fill": {
+                  "field": "mqtt_consumer.feu_crois",
+                  "fixed": "transparent"
+                },
+                "path": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "crois1",
+              "placement": {
+                "height": 40,
+                "left": 390,
+                "top": 50,
+                "width": 40
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "field": "mqtt_consumer.feu_crois",
+                  "fixed": "transparent"
+                },
+                "path": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                }
+              },
+              "connections": [],
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "crois2",
+              "placement": {
+                "height": 40,
+                "left": 495,
+                "top": 50,
+                "width": 40
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                },
+                "width": 0
+              },
+              "config": {
+                "fill": {
+                  "field": "mqtt_consumer.feu_route",
+                  "fixed": "transparent"
+                },
+                "path": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "route1",
+              "placement": {
+                "height": 60,
+                "left": 380,
+                "top": 40,
+                "width": 60
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "field": "mqtt_consumer.feu_route",
+                  "fixed": "transparent"
+                },
+                "path": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "route2",
+              "placement": {
+                "height": 60,
+                "left": 485,
+                "top": 40,
+                "width": 60
+              },
+              "type": "icon"
+            }
+          ],
+          "name": "Element 1697664010663",
+          "placement": {
+            "height": 100,
+            "left": 0,
+            "top": 0,
+            "width": 100
+          },
+          "type": "frame"
+        },
+        "showAdvancedTypes": false
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P951FEA4DE68E13C5"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "feu_clign_d"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "feu_clign_g"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "feu_crois"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "feu_pos"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "feu_route"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "transparent": true,
+      "type": "canvas"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "1": {
+                  "color": "orange",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.voy_route"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "blue",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.voy_pos"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "blue",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.voy_crois"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.voy_lav_glaces"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "light-blue",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt_consumer.voy_ess_glaces"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0
+                      },
+                      "1": {
+                        "color": "light-blue",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 15,
+        "y": 13
+      },
+      "id": 26,
+      "options": {
+        "inlineEditing": true,
+        "root": {
+          "background": {
+            "color": {
+              "fixed": "transparent"
+            },
+            "image": {
+              "field": "",
+              "fixed": "",
+              "mode": "fixed"
+            },
+            "size": "original"
+          },
+          "border": {
+            "color": {
+              "fixed": "dark-green"
+            }
+          },
+          "constraint": {
+            "horizontal": "left",
+            "vertical": "top"
+          },
+          "elements": [
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": ""
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "field": "mqtt_consumer.voy_warn",
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_warning.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Warning",
+              "placement": {
+                "height": 90,
+                "left": 5,
+                "top": 5,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_pos",
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_pos.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Pos",
+              "placement": {
+                "height": 90,
+                "left": 105,
+                "top": 5,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_crois",
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "fixed": "img/custom/voy_crois.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Croisements",
+              "placement": {
+                "height": 90,
+                "left": 205,
+                "top": 5,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_route",
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "fixed": "img/custom/voy_route.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Route",
+              "placement": {
+                "height": 90,
+                "left": 305,
+                "top": 5,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_ess",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "mode": "fixed"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_gas.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Ess",
+              "placement": {
+                "height": 90,
+                "left": 5,
+                "top": 105,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_bat_dech",
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_bat_broke.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "battery",
+              "placement": {
+                "height": 90,
+                "left": 305,
+                "top": 205,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_pos",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": ""
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "text"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_liquid.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Element 8",
+              "placement": {
+                "height": 90,
+                "left": 205,
+                "top": 105,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_sur_huile",
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_oil.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Element 9",
+              "placement": {
+                "height": 90,
+                "left": 305,
+                "top": 105,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_freins",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": ""
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_brake.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Freins",
+              "placement": {
+                "height": 90,
+                "left": 5,
+                "top": 205,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_def_mot",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": ""
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_engine.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Deft_moteur",
+              "placement": {
+                "height": 90,
+                "left": 105,
+                "top": 205,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_press_pneu",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": ""
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_tire.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Element 12",
+              "placement": {
+                "height": 90,
+                "left": 105,
+                "top": 105,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_press_mot",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": "",
+                  "mode": "fixed"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_engine_press.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Press_moteur",
+              "placement": {
+                "height": 90,
+                "left": 205,
+                "top": 205,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_ess_glaces",
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_windscreen.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Ess_glaces",
+              "placement": {
+                "height": 90,
+                "left": 405,
+                "top": 5,
+                "width": 90
+              },
+              "type": "icon"
+            },
+            {
+              "background": {
+                "color": {
+                  "field": "mqtt_consumer.voy_lav_glaces",
+                  "fixed": "transparent"
+                },
+                "image": {
+                  "fixed": "img/custom/voy_windscreen_l.svg"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "fill": {
+                  "fixed": "#D9D9D9"
+                },
+                "path": {
+                  "field": "",
+                  "fixed": "img/custom/voy_windscreen.svg",
+                  "mode": "fixed"
+                }
+              },
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Element 14",
+              "placement": {
+                "height": 90,
+                "left": 405,
+                "top": 105,
+                "width": 90
+              },
+              "type": "icon"
+            }
+          ],
+          "name": "Element 1697664010663",
+          "placement": {
+            "height": 100,
+            "left": 0,
+            "top": 0,
+            "width": 100
+          },
+          "type": "frame"
+        },
+        "showAdvancedTypes": false
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P951FEA4DE68E13C5"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "voy_pos"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_crois"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_route"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_ess"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_def_mot"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_LDR"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_bat_dech"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_ess_glaces"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_lav_glaces"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_press_pneu"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_freins"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_press_mot"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_sur_huile"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_sur_huile"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "voy_warn"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "transparent": true,
+      "type": "canvas"
+    }
+  ],
+  "refresh": "500ms",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5s",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "500ms",
+      "1s",
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "Tableau de bord",
+  "uid": "Ixf95QSVk",
+  "version": 7,
+  "weekStart": ""
+}
