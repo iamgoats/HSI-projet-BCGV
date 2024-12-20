@@ -24,6 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -33,7 +34,7 @@
         "uid": "P951FEA4DE68E13C5"
       },
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 1,
         "x": 1,
         "y": 0
@@ -45,7 +46,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<img src=\"https://www.jiffylubesocal.com/wp-content/uploads/2016/10/gas-dash-light.jpg\" alt=\"fuel_icon\" width=\"200\"/>\n",
+        "content": "<img src=\"https://www.freeiconspng.com/thumbs/fuel-icon/fuel-pump-icon-23.png\" alt=\"fuel_icon\" width=\"150\"/>\n",
         "mode": "html"
       },
       "pluginVersion": "10.1.5",
@@ -238,6 +239,7 @@
           "displayName": "Fuel",
           "mappings": [],
           "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -264,10 +266,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 3,
         "x": 0,
-        "y": 2
+        "y": 3
       },
       "id": 4,
       "options": {
@@ -603,7 +605,7 @@
       },
       "id": 24,
       "options": {
-        "inlineEditing": true,
+        "inlineEditing": false,
         "root": {
           "background": {
             "color": {
@@ -1185,7 +1187,7 @@
       },
       "id": 26,
       "options": {
-        "inlineEditing": true,
+        "inlineEditing": false,
         "root": {
           "background": {
             "color": {
@@ -1905,6 +1907,6 @@
   "timezone": "",
   "title": "Tableau de bord",
   "uid": "Ixf95QSVk",
-  "version": 7,
+  "version": 22,
   "weekStart": ""
 }
