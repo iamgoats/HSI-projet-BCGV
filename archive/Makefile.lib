@@ -1,33 +1,24 @@
-# Nom du compilateur
 CC = gcc
 
-# Options de compilation
 CFLAGS = -Wall -Wextra -pedantic -std=c99
 
-# Nom de la librairie statique générée
 LIB_NAME = libapp_data.a
 
-# Fichiers sources et objets
 SRC_FILES = app_data_generated.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 
-# Cible principale
 all: $(LIB_NAME)
 
-# Génération de la librairie statique
 $(LIB_NAME): $(OBJ_FILES)
 	@echo "Création de la librairie statique $(LIB_NAME)"
 	ar rcs $(LIB_NAME) $(OBJ_FILES)
 
-# Compilation des fichiers objets
 %.o: %.c
 	@echo "Compilation de $<"
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Nettoyage des fichiers générés
 clean:
 	@echo "Nettoyage des fichiers intermédiaires"
 	rm -f $(OBJ_FILES) $(LIB_NAME)
 
-# Indiquer que certaines cibles ne sont pas des fichiers
 .PHONY: all clean
