@@ -1,69 +1,50 @@
 /**
- * \file        fsm.c
+ * \file        fsm_feux.c
  * \author      Alexis Daley
- * \version     0.4
- * \date        08 otober 2023
- * \brief       This is a template file to create a Finite State Machine.
- * \details
+ * \brief       Implémentation d'une machine à états pour la gestion des feux.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include "drv_api.h"
+#include "fsm_feux.h"
+#include "app_data.h"
 
-
-/* States */
-typedef enum {
-    ST_ANY = -1,                            /* Any state */
-    ST_INIT = 0,                            /* Init state */
-    ST_ETEINTS = 1,                         /*State OFF && State EVERYTHING OFF*/
-    ST_ALLUMES = 2,
-    ST_ACQUITTES = 3,
-    ST_ERREUR = 4,
-    ST_TERM = 255                           /* Final state */
-} fsm_state_t;
-
-/* Events */
-typedef enum {
-    EV_ANY = -1,                            /* Any event */
-    EV_NONE = 0,                            /* No event */
-    EV_CMD_0 = 1,                           
-    EV_CMD_1 = 2,                           
-    EV_ACQUITTEMENT_RECU = 3,
-    EV_ACQUITTEMENT_NR_1 = 4,
-    EV_ERR = 255                            /* Error event */
-} fsm_event_t;
-
-static int callbackNothing(void){
-    printf("Ne rien faire");
+/* Callbacks pour les transitions */
+static int callbackNothing(void) {
+    printf("[FSM FEUX] Ne rien faire\n");
     return 0;
 }
-static int callbackTurnOnLights(void){
-    printf("Allumer la lumière");
+
+static int callbackTurnOnLights(void) {
+    printf("[FSM FEUX] Allumer les lumières\n");
     return 0;
 }
+
 static int callbackHandleAcknowledgment(void) {
-    printf("Acquitter");
+    printf("[FSM FEUX] Acquitter\n");
     return 0;
 }
 
 static int callbackHandleTimeout(void) {
-    printf("Temps supérieur à 1 sec\n");
+    printf("[FSM FEUX] Temps supérieur à 1 sec\n");
     return 0;
 }
 
 static int callbackTurnOffLights(void) {
-    printf("Eteindre");
+    printf("[FSM FEUX] Éteindre les lumières\n");
     return 0;
 }
 
 static int FsmError(void) {
-    printf("Erreur critique détectée.\n");
+    printf("[FSM FEUX] Erreur critique détectée.\n");
     return -1;
 }
-/* Transition structure */
+
+/* Structure des transitions */
 typedef struct {
     fsm_state_t state;
     fsm_event_t event;
@@ -71,112 +52,107 @@ typedef struct {
     int next_state;
 } tTransition;
 
-/* Transition table */
+/* Tableau des transitions */
 tTransition trans[] = {
-    {ST_INIT, EV_NONE, &callbackTurnOffLights, ST_ETEINTS },
-    { ST_ETEINTS, EV_CMD_1, &callbackTurnOnLights, ST_ALLUMES },
-    { ST_ETEINTS,EV_CMD_0,&callbackNothing, ST_ETEINTS },
-    { ST_ALLUMES,EV_CMD_0,&callbackNothing,ST_ALLUMES },
-    { ST_ALLUMES, EV_ACQUITTEMENT_RECU, &callbackHandleAcknowledgment, ST_ACQUITTES },
-    { ST_ALLUMES, EV_ACQUITTEMENT_NR_1, &callbackHandleTimeout, ST_ERREUR },
-    { ST_ACQUITTES, EV_CMD_0, &callbackTurnOffLights, ST_ETEINTS },
-    { ST_ACQUITTES, EV_CMD_0, &callbackNothing, ST_ACQUITTES },
-    { ST_ERREUR, EV_NONE, &FsmError, ST_TERM },
-    { ST_ANY, EV_ERR, &FsmError, ST_TERM }
+    {ST_INIT, EV_NONE, &callbackTurnOffLights, ST_ETEINTS},
+    {ST_ETEINTS, EV_CMD_1, &callbackTurnOnLights, ST_ALLUMES},
+    {ST_ETEINTS, EV_CMD_0, &callbackNothing, ST_ETEINTS},
+    {ST_ALLUMES, EV_CMD_0, &callbackNothing, ST_ALLUMES},
+    {ST_ALLUMES, EV_ACQUITTEMENT_RECU, &callbackHandleAcknowledgment, ST_ACQUITTES},
+    {ST_ALLUMES, EV_ACQUITTEMENT_NR_1, &callbackHandleTimeout, ST_ERREUR},
+    {ST_ACQUITTES, EV_CMD_0, &callbackTurnOffLights, ST_ETEINTS},
+    {ST_ACQUITTES, EV_CMD_0, &callbackNothing, ST_ACQUITTES},
+    {ST_ERREUR, EV_NONE, &FsmError, ST_TERM},
+    {ST_ANY, EV_ERR, &FsmError, ST_TERM}
 };
 
+#define TRANS_COUNT (sizeof(trans) / sizeof(*trans))
 
-#define TRANS_COUNT (sizeof(trans)/sizeof(*trans))
+static fsm_state_t state = ST_INIT;
+static t_app_data_t app_data;
 
-
- int get_next_event(int current_state) {
-
-    int event = EV_NONE;
-    int command = 0;
-    bool acquittement = false;
-
-
-    if (current_state == ST_ALLUMES) {
-        int32_t drvFd = drv_open();
-        if (drvFd < 0) {
-            printf("Erreur : impossible d'ouvrir le driver.\n");
-            return EV_ERR; 
-        }
-
-        for (int i = 0; i < 10; i++) {
-            acquittement = getAcquittement();
-            if (acquittement) {
-                drv_close(drvFd);
-                return EV_ACQUITTEMENT_RECU; 
-            }
-
-            
-            uint8_t udpFrame[DRV_UDP_100MS_FRAME_SIZE];
-            if (drv_read_udp_100ms(drvFd, udpFrame) == DRV_SUCCESS) {
-                command = udpFrame[0];
-                switch (command) {
-                    case 0x01: 
-                        drv_close(drvFd);
-                        return EV_CMD_1;
-                    case 0x00: 
-                        drv_close(drvFd);
-                        return EV_CMD_0;
-                }
-            }
-        }
-
-        
-        drv_close(drvFd);
-        return EV_ACQUITTEMENT_NR_1; 
+/**
+ * \brief Décoder une trame UDP et mettre à jour app_data.
+ * \param frame : Trame UDP reçue.
+ */
+void decode_udp_frame(const uint8_t *frame, t_app_data_t *data) {
+    if (frame == NULL || data == NULL) {
+        printf("Erreur : trame ou données nulles\n");
+        return;
     }
- 
-    command = getCommand();
-    switch (command) {
-        case 0x01: 
-            event = EV_CMD_1;
-            break;
-        case 0x00: 
-            event = EV_CMD_0;
-            break;
-        default:
-            printf("Commande inconnue : %02X\n", command);
-            break;
+
+    data->command = frame[0];
+    data->acquittement = frame[1];
+}
+
+/**
+ * \brief Détermine le prochain événement à partir de l'état actuel.
+ * \param current_state L'état actuel de la machine à états.
+ * \return L'événement détecté.
+ */
+fsm_event_t get_next_event(fsm_state_t current_state) {
+    fsm_event_t event = EV_NONE;
+    uint8_t udpFrame[DRV_UDP_100MS_FRAME_SIZE];
+
+
+    // Lire une trame UDP depuis le driver
+    int32_t drvFd = drv_open();
+    if (drvFd < 0) {
+        printf("Erreur : impossible d'ouvrir le driver.\n");
+        return EV_ERR;
+    }
+
+    if (drv_read_udp_100ms(drvFd, udpFrame) == DRV_SUCCESS) {
+        decode_udp_frame(udpFrame, &app_data);
+    } else {
+        printf("Erreur lors de la lecture de la trame UDP.\n");
+        drv_close(drvFd);
+        return EV_ERR;
+    }
+
+    drv_close(drvFd);
+
+    /* Déterminer l'événement à partir de app_data */
+    if (current_state == ST_ALLUMES && app_data.acquittement) {
+        return EV_ACQUITTEMENT_RECU;
+    }
+
+    if (app_data.command == 0x01) {
+        event = EV_CMD_1;
+    } else if (app_data.command == 0x00) {
+        event = EV_CMD_0;
     }
 
     return event;
 }
 
+/**
+ * \brief Exécute la machine à états.
+ */
+void fsm_feux_run(void) {
+    fsm_event_t event = get_next_event(state);
 
-int main(void)
-{
-    int i = 0;
-    int ret = 0; 
-    int event = EV_NONE;
-    int state = ST_INIT;
-    
-    /* While FSM hasn't reach end state */
-    while (state != ST_TERM) {
-        
-        /* Get event */
-        event = get_next_event(state);
-        
-        /* For each transitions */
-        for (i = 0; i < TRANS_COUNT; i++) {
-            /* If State is current state OR The transition applies to all states ...*/
-            if ((state == trans[i].state) || (ST_ANY == trans[i].state)) {
-                /* If event is the transition event OR the event applies to all */
-                if ((event == trans[i].event) || (EV_ANY == trans[i].event)) {
-                    /* Apply the new state */
-                    state = trans[i].next_state;
-                    if (trans[i].callback != NULL) {
-                        /* Call the state function */
-                        ret = (trans[i].callback)();
-                    }
-                    break;
-                }
+    for (int i = 0; i < TRANS_COUNT; i++) {
+        if ((state == trans[i].state || trans[i].state == ST_ANY) &&
+            (event == trans[i].event || trans[i].event == EV_ANY)) {
+            state = trans[i].next_state;
+            if (trans[i].callback) {
+                trans[i].callback();
             }
+            break;
         }
     }
+}
 
-    return ret;
+int main(void) {
+    // Initialiser app_data
+    app_data.command = 0;
+    app_data.acquittement = false;
+
+    while (state != ST_TERM) {
+        fsm_feux_run();
+        usleep(100000);
+    }
+
+    return 0;
 }
