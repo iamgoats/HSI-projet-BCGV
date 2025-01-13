@@ -5,7 +5,7 @@ CFLAGS = -Wall -Wextra -pedantic -std=c99
 APP_NAME = app
 
 SRC_FILES = app.c
-OBJ_FILES = $(SRC_FILES:.c=.o)
+OBJ_FILES = *.o
 
 LIB_DIR = .
 LIB_NAME = libapp_data.a
