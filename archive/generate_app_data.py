@@ -126,3 +126,53 @@ try:
     print(f"Fichier généré avec succès : {output_file}")
 except IOError as e:
     print(f"Erreur lors de la génération du fichier : {e}")
+
+
+
+header_file_content = """\
+#ifndef APP_DATA_H
+#define APP_DATA_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+/* Définition des types */
+typedef uint32_t t_kilometrage_t;
+typedef uint8_t t_vitesse_t;
+typedef uint8_t t_reservoir_t;
+typedef uint16_t t_tours_minute_t;
+typedef uint8_t t_command_t;
+typedef bool t_acquittement_t;
+
+/* Définition de la structure des données */
+typedef struct {
+""" + "".join(
+    [f"    {field['type']} {field['name']}; /**< {field['comment']} */\n" for field in fields]
+) + """} t_app_data_t;
+
+/* Taille de la trame UDP */
+#define FRAME_SIZE 14
+
+/* Prototypes des fonctions */
+void init_app_data(t_app_data_t *data);
+""" + "".join(
+    [f"{field['type']} get_{field['name']}(const t_app_data_t *data);\n"
+     f"int set_{field['name']}(t_app_data_t *data, {field['type']} value);\n"
+     for field in fields]
+) + """\
+void decode_udp_frame(const uint8_t *frame, t_app_data_t *data);
+void generate_ack_frame(uint8_t *frame, const t_app_data_t *data);
+bool validate_ack_frame(const uint8_t *ack_frame, const t_app_data_t *data);
+
+#endif /* APP_DATA_H */
+"""
+
+header_output_file = "app_data.h"
+
+try:
+    with open(header_output_file, "w") as f:
+        print(f"Écriture dans le fichier : {header_output_file}")
+        f.write(header_file_content)
+    print(f"Fichier .h généré avec succès : {header_output_file}")
+except IOError as e:
+    print(f"Erreur lors de la génération du fichier : {e}")
