@@ -20,7 +20,9 @@ typedef struct {
     t_tours_minute_t tours_minute;
     t_command_t command;            /**< Commande courante */
     t_acquittement_t acquittement;  /**< Indicateur d'acquittement */
-} t_app_data_t;
+} app_data_udp;
+
+
 
 /* Taille de la trame UDP */
 #define FRAME_SIZE 14
