@@ -10,9 +10,9 @@
 /**
  * \brief   Récupère la valeur de voyant_feux_de_position.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_feux_de_position.
+ * \return  voyant_t : Valeur actuelle de voyant_feux_de_position.
  */
-t_voyant_t get_voyant_feux_de_position(const app_data_t *data) {
+voyant_t get_voyant_feux_de_position(const app_data_t *data) {
     return data->voyant_feux_de_position;
 }
 
@@ -22,7 +22,7 @@ t_voyant_t get_voyant_feux_de_position(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_feux_de_position(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_feux_de_position(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_feux_de_position (%d).\n", value);
         return -1;
@@ -34,9 +34,9 @@ int set_voyant_feux_de_position(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_feux_de_croisement.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_feux_de_croisement.
+ * \return  voyant_t : Valeur actuelle de voyant_feux_de_croisement.
  */
-t_voyant_t get_voyant_feux_de_croisement(const app_data_t *data) {
+voyant_t get_voyant_feux_de_croisement(const app_data_t *data) {
     return data->voyant_feux_de_croisement;
 }
 
@@ -46,7 +46,7 @@ t_voyant_t get_voyant_feux_de_croisement(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_feux_de_croisement(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_feux_de_croisement(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_feux_de_croisement (%d).\n", value);
         return -1;
@@ -58,9 +58,9 @@ int set_voyant_feux_de_croisement(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_feux_de_route.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_feux_de_route.
+ * \return  voyant_t : Valeur actuelle de voyant_feux_de_route.
  */
-t_voyant_t get_voyant_feux_de_route(const app_data_t *data) {
+voyant_t get_voyant_feux_de_route(const app_data_t *data) {
     return data->voyant_feux_de_route;
 }
 
@@ -70,7 +70,7 @@ t_voyant_t get_voyant_feux_de_route(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_feux_de_route(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_feux_de_route(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_feux_de_route (%d).\n", value);
         return -1;
@@ -82,9 +82,9 @@ int set_voyant_feux_de_route(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_essence.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_essence.
+ * \return  voyant_t : Valeur actuelle de voyant_essence.
  */
-t_voyant_t get_voyant_essence(const app_data_t *data) {
+voyant_t get_voyant_essence(const app_data_t *data) {
     return data->voyant_essence;
 }
 
@@ -94,7 +94,7 @@ t_voyant_t get_voyant_essence(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_essence(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_essence(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_essence (%d).\n", value);
         return -1;
@@ -106,9 +106,9 @@ int set_voyant_essence(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_défaut_de_moteur.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_défaut_de_moteur.
+ * \return  voyant_t : Valeur actuelle de voyant_défaut_de_moteur.
  */
-t_voyant_t get_voyant_défaut_de_moteur(const app_data_t *data) {
+voyant_t get_voyant_défaut_de_moteur(const app_data_t *data) {
     return data->voyant_défaut_de_moteur;
 }
 
@@ -118,7 +118,7 @@ t_voyant_t get_voyant_défaut_de_moteur(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_défaut_de_moteur(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_défaut_de_moteur(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_défaut_de_moteur (%d).\n", value);
         return -1;
@@ -130,9 +130,9 @@ int set_voyant_défaut_de_moteur(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_pression_de_pneu.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_pression_de_pneu.
+ * \return  voyant_t : Valeur actuelle de voyant_pression_de_pneu.
  */
-t_voyant_t get_voyant_pression_de_pneu(const app_data_t *data) {
+voyant_t get_voyant_pression_de_pneu(const app_data_t *data) {
     return data->voyant_pression_de_pneu;
 }
 
@@ -142,7 +142,7 @@ t_voyant_t get_voyant_pression_de_pneu(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_pression_de_pneu(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_pression_de_pneu(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_pression_de_pneu (%d).\n", value);
         return -1;
@@ -154,9 +154,9 @@ int set_voyant_pression_de_pneu(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_batterie_déchargée.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_batterie_déchargée.
+ * \return  voyant_t : Valeur actuelle de voyant_batterie_déchargée.
  */
-t_voyant_t get_voyant_batterie_déchargée(const app_data_t *data) {
+voyant_t get_voyant_batterie_déchargée(const app_data_t *data) {
     return data->voyant_batterie_déchargée;
 }
 
@@ -166,7 +166,7 @@ t_voyant_t get_voyant_batterie_déchargée(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_batterie_déchargée(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_batterie_déchargée(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_batterie_déchargée (%d).\n", value);
         return -1;
@@ -178,9 +178,9 @@ int set_voyant_batterie_déchargée(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_warnings.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_warnings.
+ * \return  voyant_t : Valeur actuelle de voyant_warnings.
  */
-t_voyant_t get_voyant_warnings(const app_data_t *data) {
+voyant_t get_voyant_warnings(const app_data_t *data) {
     return data->voyant_warnings;
 }
 
@@ -190,7 +190,7 @@ t_voyant_t get_voyant_warnings(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_warnings(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_warnings(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_warnings (%d).\n", value);
         return -1;
@@ -202,9 +202,9 @@ int set_voyant_warnings(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_panne_batterie.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_panne_batterie.
+ * \return  voyant_t : Valeur actuelle de voyant_panne_batterie.
  */
-t_voyant_t get_voyant_panne_batterie(const app_data_t *data) {
+voyant_t get_voyant_panne_batterie(const app_data_t *data) {
     return data->voyant_panne_batterie;
 }
 
@@ -214,7 +214,7 @@ t_voyant_t get_voyant_panne_batterie(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_panne_batterie(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_panne_batterie(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_panne_batterie (%d).\n", value);
         return -1;
@@ -226,9 +226,9 @@ int set_voyant_panne_batterie(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_temp_ldr.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_temp_ldr.
+ * \return  voyant_t : Valeur actuelle de voyant_temp_ldr.
  */
-t_voyant_t get_voyant_temp_ldr(const app_data_t *data) {
+voyant_t get_voyant_temp_ldr(const app_data_t *data) {
     return data->voyant_temp_ldr;
 }
 
@@ -238,7 +238,7 @@ t_voyant_t get_voyant_temp_ldr(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_temp_ldr(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_temp_ldr(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_temp_ldr (%d).\n", value);
         return -1;
@@ -250,9 +250,9 @@ int set_voyant_temp_ldr(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_pession_moteur.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_pession_moteur.
+ * \return  voyant_t : Valeur actuelle de voyant_pession_moteur.
  */
-t_voyant_t get_voyant_pession_moteur(const app_data_t *data) {
+voyant_t get_voyant_pession_moteur(const app_data_t *data) {
     return data->voyant_pession_moteur;
 }
 
@@ -262,7 +262,7 @@ t_voyant_t get_voyant_pession_moteur(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_pession_moteur(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_pession_moteur(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_pession_moteur (%d).\n", value);
         return -1;
@@ -274,9 +274,9 @@ int set_voyant_pession_moteur(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_surchauffe_huile.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_surchauffe_huile.
+ * \return  voyant_t : Valeur actuelle de voyant_surchauffe_huile.
  */
-t_voyant_t get_voyant_surchauffe_huile(const app_data_t *data) {
+voyant_t get_voyant_surchauffe_huile(const app_data_t *data) {
     return data->voyant_surchauffe_huile;
 }
 
@@ -286,7 +286,7 @@ t_voyant_t get_voyant_surchauffe_huile(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_surchauffe_huile(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_surchauffe_huile(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_surchauffe_huile (%d).\n", value);
         return -1;
@@ -298,9 +298,9 @@ int set_voyant_surchauffe_huile(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de voyant_défallaince_freins.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_voyant_t : Valeur actuelle de voyant_défallaince_freins.
+ * \return  voyant_t : Valeur actuelle de voyant_défallaince_freins.
  */
-t_voyant_t get_voyant_défallaince_freins(const app_data_t *data) {
+voyant_t get_voyant_défallaince_freins(const app_data_t *data) {
     return data->voyant_défallaince_freins;
 }
 
@@ -310,7 +310,7 @@ t_voyant_t get_voyant_défallaince_freins(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_voyant_défallaince_freins(t_app_data_t *data, t_voyant_t value) {
+int set_voyant_défallaince_freins(t_app_data_t *data, voyant_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour voyant_défallaince_freins (%d).\n", value);
         return -1;
@@ -322,9 +322,9 @@ int set_voyant_défallaince_freins(t_app_data_t *data, t_voyant_t value) {
 /**
  * \brief   Récupère la valeur de activation_essuie_glaces.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_commande_t : Valeur actuelle de activation_essuie_glaces.
+ * \return  commande_t : Valeur actuelle de activation_essuie_glaces.
  */
-t_commande_t get_activation_essuie_glaces(const app_data_t *data) {
+commande_t get_activation_essuie_glaces(const app_data_t *data) {
     return data->activation_essuie_glaces;
 }
 
@@ -334,7 +334,7 @@ t_commande_t get_activation_essuie_glaces(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_activation_essuie_glaces(t_app_data_t *data, t_commande_t value) {
+int set_activation_essuie_glaces(t_app_data_t *data, commande_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour activation_essuie_glaces (%d).\n", value);
         return -1;
@@ -346,9 +346,9 @@ int set_activation_essuie_glaces(t_app_data_t *data, t_commande_t value) {
 /**
  * \brief   Récupère la valeur de activation_lave_glace.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_commande_t : Valeur actuelle de activation_lave_glace.
+ * \return  commande_t : Valeur actuelle de activation_lave_glace.
  */
-t_commande_t get_activation_lave_glace(const app_data_t *data) {
+commande_t get_activation_lave_glace(const app_data_t *data) {
     return data->activation_lave_glace;
 }
 
@@ -358,7 +358,7 @@ t_commande_t get_activation_lave_glace(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_activation_lave_glace(t_app_data_t *data, t_commande_t value) {
+int set_activation_lave_glace(t_app_data_t *data, commande_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour activation_lave_glace (%d).\n", value);
         return -1;
@@ -370,9 +370,9 @@ int set_activation_lave_glace(t_app_data_t *data, t_commande_t value) {
 /**
  * \brief   Récupère la valeur de affichage_kilométrage.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_km_t : Valeur actuelle de affichage_kilométrage.
+ * \return  km_t : Valeur actuelle de affichage_kilométrage.
  */
-t_km_t get_affichage_kilométrage(const app_data_t *data) {
+km_t get_affichage_kilométrage(const app_data_t *data) {
     return data->affichage_kilométrage;
 }
 
@@ -382,7 +382,7 @@ t_km_t get_affichage_kilométrage(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_affichage_kilométrage(t_app_data_t *data, t_km_t value) {
+int set_affichage_kilométrage(t_app_data_t *data, km_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour affichage_kilométrage (%d).\n", value);
         return -1;
@@ -394,9 +394,9 @@ int set_affichage_kilométrage(t_app_data_t *data, t_km_t value) {
 /**
  * \brief   Récupère la valeur de affichage_vitesse_.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_vitesse_t : Valeur actuelle de affichage_vitesse_.
+ * \return  vitesse_t : Valeur actuelle de affichage_vitesse_.
  */
-t_vitesse_t get_affichage_vitesse_(const app_data_t *data) {
+vitesse_t get_affichage_vitesse_(const app_data_t *data) {
     return data->affichage_vitesse_;
 }
 
@@ -406,7 +406,7 @@ t_vitesse_t get_affichage_vitesse_(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_affichage_vitesse_(t_app_data_t *data, t_vitesse_t value) {
+int set_affichage_vitesse_(t_app_data_t *data, vitesse_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour affichage_vitesse_ (%d).\n", value);
         return -1;
@@ -418,9 +418,9 @@ int set_affichage_vitesse_(t_app_data_t *data, t_vitesse_t value) {
 /**
  * \brief   Récupère la valeur de affichage_niveau_réservoir.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_reservoir_t : Valeur actuelle de affichage_niveau_réservoir.
+ * \return  reservoir_t : Valeur actuelle de affichage_niveau_réservoir.
  */
-t_reservoir_t get_affichage_niveau_réservoir(const app_data_t *data) {
+reservoir_t get_affichage_niveau_réservoir(const app_data_t *data) {
     return data->affichage_niveau_réservoir;
 }
 
@@ -430,7 +430,7 @@ t_reservoir_t get_affichage_niveau_réservoir(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_affichage_niveau_réservoir(t_app_data_t *data, t_reservoir_t value) {
+int set_affichage_niveau_réservoir(t_app_data_t *data, reservoir_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour affichage_niveau_réservoir (%d).\n", value);
         return -1;
@@ -442,9 +442,9 @@ int set_affichage_niveau_réservoir(t_app_data_t *data, t_reservoir_t value) {
 /**
  * \brief   Récupère la valeur de affichage_tours_minutes.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_trmin_t : Valeur actuelle de affichage_tours_minutes.
+ * \return  trmin_t : Valeur actuelle de affichage_tours_minutes.
  */
-t_trmin_t get_affichage_tours_minutes(const app_data_t *data) {
+trmin_t get_affichage_tours_minutes(const app_data_t *data) {
     return data->affichage_tours_minutes;
 }
 
@@ -454,7 +454,7 @@ t_trmin_t get_affichage_tours_minutes(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_affichage_tours_minutes(t_app_data_t *data, t_trmin_t value) {
+int set_affichage_tours_minutes(t_app_data_t *data, trmin_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour affichage_tours_minutes (%d).\n", value);
         return -1;
@@ -466,9 +466,9 @@ int set_affichage_tours_minutes(t_app_data_t *data, t_trmin_t value) {
 /**
  * \brief   Récupère la valeur de cmd_warning.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_commande_t : Valeur actuelle de cmd_warning.
+ * \return  commande_t : Valeur actuelle de cmd_warning.
  */
-t_commande_t get_cmd_warning(const app_data_t *data) {
+commande_t get_cmd_warning(const app_data_t *data) {
     return data->cmd_warning;
 }
 
@@ -478,7 +478,7 @@ t_commande_t get_cmd_warning(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_cmd_warning(t_app_data_t *data, t_commande_t value) {
+int set_cmd_warning(t_app_data_t *data, commande_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour cmd_warning (%d).\n", value);
         return -1;
@@ -490,9 +490,9 @@ int set_cmd_warning(t_app_data_t *data, t_commande_t value) {
 /**
  * \brief   Récupère la valeur de cmd_feux_de_poition.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_commande_t : Valeur actuelle de cmd_feux_de_poition.
+ * \return  commande_t : Valeur actuelle de cmd_feux_de_poition.
  */
-t_commande_t get_cmd_feux_de_poition(const app_data_t *data) {
+commande_t get_cmd_feux_de_poition(const app_data_t *data) {
     return data->cmd_feux_de_poition;
 }
 
@@ -502,7 +502,7 @@ t_commande_t get_cmd_feux_de_poition(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_cmd_feux_de_poition(t_app_data_t *data, t_commande_t value) {
+int set_cmd_feux_de_poition(t_app_data_t *data, commande_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour cmd_feux_de_poition (%d).\n", value);
         return -1;
@@ -514,9 +514,9 @@ int set_cmd_feux_de_poition(t_app_data_t *data, t_commande_t value) {
 /**
  * \brief   Récupère la valeur de cmd_feux_de_route.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_commande_t : Valeur actuelle de cmd_feux_de_route.
+ * \return  commande_t : Valeur actuelle de cmd_feux_de_route.
  */
-t_commande_t get_cmd_feux_de_route(const app_data_t *data) {
+commande_t get_cmd_feux_de_route(const app_data_t *data) {
     return data->cmd_feux_de_route;
 }
 
@@ -526,7 +526,7 @@ t_commande_t get_cmd_feux_de_route(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_cmd_feux_de_route(t_app_data_t *data, t_commande_t value) {
+int set_cmd_feux_de_route(t_app_data_t *data, commande_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour cmd_feux_de_route (%d).\n", value);
         return -1;
@@ -538,9 +538,9 @@ int set_cmd_feux_de_route(t_app_data_t *data, t_commande_t value) {
 /**
  * \brief   Récupère la valeur de cmd_clignotant_droit.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_commande_t : Valeur actuelle de cmd_clignotant_droit.
+ * \return  commande_t : Valeur actuelle de cmd_clignotant_droit.
  */
-t_commande_t get_cmd_clignotant_droit(const app_data_t *data) {
+commande_t get_cmd_clignotant_droit(const app_data_t *data) {
     return data->cmd_clignotant_droit;
 }
 
@@ -550,7 +550,7 @@ t_commande_t get_cmd_clignotant_droit(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_cmd_clignotant_droit(t_app_data_t *data, t_commande_t value) {
+int set_cmd_clignotant_droit(t_app_data_t *data, commande_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour cmd_clignotant_droit (%d).\n", value);
         return -1;
@@ -562,9 +562,9 @@ int set_cmd_clignotant_droit(t_app_data_t *data, t_commande_t value) {
 /**
  * \brief   Récupère la valeur de cmd_clignotant_gauche.
  * \param   data : Pointeur vers la structure applicative.
- * \return  t_commande_t : Valeur actuelle de cmd_clignotant_gauche.
+ * \return  commande_t : Valeur actuelle de cmd_clignotant_gauche.
  */
-t_commande_t get_cmd_clignotant_gauche(const app_data_t *data) {
+commande_t get_cmd_clignotant_gauche(const app_data_t *data) {
     return data->cmd_clignotant_gauche;
 }
 
@@ -574,7 +574,7 @@ t_commande_t get_cmd_clignotant_gauche(const app_data_t *data) {
  * \param   value : Nouvelle valeur à attribuer.
  * \return  int : 0 si succès, -1 si erreur.
  */
-int set_cmd_clignotant_gauche(t_app_data_t *data, t_commande_t value) {
+int set_cmd_clignotant_gauche(t_app_data_t *data, commande_t value) {
     if (value > 255) {
         printf("Erreur : Valeur hors borne pour cmd_clignotant_gauche (%d).\n", value);
         return -1;

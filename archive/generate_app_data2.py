@@ -44,7 +44,7 @@ def generate_field_definition(field: Dict, types: Dict) -> Dict:
     type_info = types.get(field['type'], {})
     return {
         'name': field['name'],
-        'type': f"t_{field['type']}",
+        'type': field['type'],
         'comment': field['comment'],
         'bounds': (0, type_info.get('max_value', 255))
     }
@@ -138,6 +138,7 @@ def generate_header(fields: List[Dict], types: Dict) -> str:
         f"int set_{field['name']}(app_data_t *data, {field['type']} value);"
         for field in fields
     ])
+    
     type_structs = generate_type_structs(types)
 
     return f"""#ifndef APP_DATA_H
