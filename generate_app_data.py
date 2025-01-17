@@ -7,17 +7,18 @@ def parse_types_csv(filename: str) -> Dict[str, Dict]:
     with open(filename, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            domain = row['Domaine'].strip('[]').split(',')[0] if row['Domaine'] else "0"
-            max_val = domain.split('...')[-1].strip() if '...' in domain else domain
+            
+            if (row['Genre'] == 'Atom'):
+                max_val = int(row['Domaine'].strip('[]').split(',')[-1] if row['Domaine'] else "0")
+                
             
             # Gérer les types énumérés
-            if row['Genre'] == 'Enum':
+            elif row['Genre'] == 'Enum':
                 try:
-                    enum_values = eval(row['Déclaration'])
+                    enum_values = row['Declaration']
                     max_val = len(enum_values) - 1
                 except:
                     max_val = 1  # Valeur par défaut pour les énums
-
             types[row['Nom']] = { 
                 'genre': row['Genre'],
                 'declaration': row['Declaration'] or f'uint8_t',  # Type par défaut
@@ -35,24 +36,26 @@ def parse_data_csv(filename: str, type_fields) -> List[Dict]:
             
             type = type_fields[row["Type"]]["declaration"]
             if type in ("uint8_t", "uint32_t", "bool"):
-                type_type = type
+                typeInStruct = type
             else:
                 type = str
             fields.append({
                 'name': row['Nom'].lower().replace(' ', '_').replace('.', ''),
-                'type': type_type,
+                'type': row['Type'],
+                'type_in_struct': typeInStruct,
                 'comment': row['Commentaire'] or row['Nom']
             })
     return fields
 
 def generate_field_definition(field: Dict, types: Dict) -> Dict:
     """Génère la définition complète d'un champ."""
-    type_info = types.get(field['type'], {})
+    # print(types[field["type"]]["max_value"])
     return {
         'name': field['name'],
         'type': field['type'],
+        'type_in_struct': field["type_in_struct"],
         'comment': field['comment'],
-        'bounds': (0, type_info.get('max_value', 255))
+        'bounds':  types[field["type"]]["max_value"]
     }
 
 def generate_getter(field: Dict) -> str:
@@ -70,11 +73,14 @@ def generate_getter(field: Dict) -> str:
 
 def generate_setter(field: Dict) -> str:    
     """Génère le setter pour un champ."""
-    bounds_check = f"""
-    if (value > {field['bounds'][1]}) {{
-        printf("Erreur : Valeur hors borne pour {field['name']} (%d).\\n", value);
-        return -1;
-    }}""" if field['bounds'] else ""
+    # print(type(field['type_in_struct']))
+    bounds_check = ""
+    if (field['type_in_struct'] != 'bool'):
+        bounds_check = f"""
+        if (value > {field['bounds']}) {{
+            printf("Erreur : Valeur hors borne pour {field['name']} (%d).\\n", value);
+            return -1;
+        }}"""
 
     return f"""
 /**
@@ -83,16 +89,16 @@ def generate_setter(field: Dict) -> str:
  * \\param   value : Nouvelle valeur à attribuer.
  * \\return  int : 0 si succès, -1 si erreur.
  */
-int set_{field['name']}(app_data_t *data, {field['type']} value) {{
+int set_{field['name']}(app_data_t *data, {field['type_in_struct']} value) {{
     {bounds_check.strip()}
-    data->{field['name']} = value;
+    data->{field['name']}.value = value;
     return 0;
 }}
 """
 
 def generate_decode(fields: List[Dict]) -> str:
     """Génère la fonction de décodage UDP."""
-    lines = [f"    data->{field['name']} = frame[{i}];" for i, field in enumerate(fields)]
+    lines = [f"    data->{field['name']}.value = frame[{i}];" for i, field in enumerate(fields)]
     return f"""
 /**
  * \\brief   Décoder une trame UDP reçue.
@@ -103,6 +109,7 @@ void decode_udp_frame(const uint8_t *frame, app_data_t *data) {{
 {chr(10).join(lines)}
 }}
 """
+
 def generate_type_structs(types: Dict) -> str:
     """Génère les structures et les énumérations des types définis en utilisant les déclarations spécifiées."""
     structs = []
@@ -115,17 +122,16 @@ def generate_type_structs(types: Dict) -> str:
                 enum_values = tuple(declaration.split(', '))
                 enum_body = ",\n    ".join(enum_values)
                 structs.append(f"""// Definition de  {type_name}
-typedef enum {{
+typedef enum {type_name} {{
     {enum_body}
 }} {type_name};
 """)
             except Exception as e:
                 structs.append(f"// Error parsing enum for {type_name}: {e}")
 
-        elif type_genre.lower() == "atom":
-            # Pour les types atomiques, utiliser la déclaration directement
-            structs.append(f"""// Definition of {type_name}
-typedef struct {{
+        # Pour les types atomiques, utiliser la déclaration directement
+        structs.append(f"""// Definition of {type_name}
+typedef struct {type_name}{{
     {declaration} value;  // {comment}
 }} {type_name};
 """)
@@ -141,7 +147,7 @@ def generate_header(fields: List[Dict], types: Dict) -> str:
     struct_fields = "\n".join([f"    {field['type']} {field['name']}; // {field['comment']}" for field in fields])
     prototypes = "\n".join([
         f"{field['type']} get_{field['name']}(const app_data_t *data);\n"
-        f"int set_{field['name']}(app_data_t *data, {field['type']} value);"
+        f"int set_{field['name']}(app_data_t *data, {field['type_in_struct']} value);"
         for field in fields
     ])
     
@@ -179,7 +185,6 @@ def main():
     types = parse_types_csv('types.csv')
     data_fields = parse_data_csv('data.csv', types)
     fields = [generate_field_definition(field, types) for field in data_fields]
-
     try:
         with open("archive/app_data_generated.c", "w") as f:
             f.write("""/**
