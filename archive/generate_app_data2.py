@@ -77,7 +77,7 @@ def generate_setter(field: Dict) -> str:
  * \\param   value : Nouvelle valeur à attribuer.
  * \\return  int : 0 si succès, -1 si erreur.
  */
-int set_{field['name']}(t_app_data_t *data, {field['type']} value) {{
+int set_{field['name']}(app_data_t *data, {field['type']} value) {{
     {bounds_check.strip()}
     data->{field['name']} = value;
     return 0;
