@@ -181,7 +181,7 @@ def main():
     fields = [generate_field_definition(field, types) for field in data_fields]
 
     try:
-        with open("app_data_generated.c", "w") as f:
+        with open("archive/app_data_generated.c", "w") as f:
             f.write("""/**
  * \\file        app_data_generated.c
  * \\brief       Implémentation générée automatiquement des getters, setters et fonctions UDP.
@@ -196,7 +196,7 @@ def main():
                 f.write(generate_setter(field))
             f.write(generate_decode(fields))
 
-        with open("app_data.h", "w") as f:
+        with open("archive/app_data.h", "w") as f:
             f.write(generate_header(fields, types))
 
         print("Fichiers générés avec succès!")
