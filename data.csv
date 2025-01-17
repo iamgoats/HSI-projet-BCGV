@@ -15,7 +15,7 @@ Id,Nom,Type,Dimension,InitVal,Commentaire
 14,Activation Essuie_glaces,commande_t,,,
 15,Activation Lave_Glace,commande_t,,,
 16,Affichage kilométrage,km_t,,,
-17,Affichage vitesse ,vitesse_t,,,
+17,Affichage vitesse,vitesse_t,,,
 18,Affichage niveau réservoir,reservoir_t,,,
 19,Affichage tours_minutes,trmin_t,,,
 20,Cmd warning,commande_t,,,

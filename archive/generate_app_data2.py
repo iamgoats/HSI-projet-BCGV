@@ -26,15 +26,21 @@ def parse_types_csv(filename: str) -> Dict[str, Dict]:
             }
     return types
 
-def parse_data_csv(filename: str) -> List[Dict]:
+def parse_data_csv(filename: str, type_fields) -> List[Dict]:
     """Parse le fichier de données et retourne une liste des champs."""
     fields = []
     with open(filename, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            
+            type = type_fields[row["Type"]]["declaration"]
+            if type in ("uint8_t", "uint32_t", "bool"):
+                type_type = type
+            else:
+                type = str
             fields.append({
                 'name': row['Nom'].lower().replace(' ', '_').replace('.', ''),
-                'type': row['Type'],
+                'type': type_type,
                 'comment': row['Commentaire'] or row['Nom']
             })
     return fields
@@ -62,7 +68,7 @@ def generate_getter(field: Dict) -> str:
 }}
 """
 
-def generate_setter(field: Dict) -> str:
+def generate_setter(field: Dict) -> str:    
     """Génère le setter pour un champ."""
     bounds_check = f"""
     if (value > {field['bounds'][1]}) {{
@@ -77,7 +83,7 @@ def generate_setter(field: Dict) -> str:
  * \\param   value : Nouvelle valeur à attribuer.
  * \\return  int : 0 si succès, -1 si erreur.
  */
-int set_{field['name']}(t_app_data_t *data, {field['type']} value) {{
+int set_{field['name']}(app_data_t *data, {field['type']} value) {{
     {bounds_check.strip()}
     data->{field['name']} = value;
     return 0;
@@ -171,7 +177,7 @@ bool validate_ack_frame(const uint8_t *ack_frame, const app_data_t *data);
 def main():
     """Fonction principale pour générer les fichiers C et header."""
     types = parse_types_csv('types.csv')
-    data_fields = parse_data_csv('data.csv')
+    data_fields = parse_data_csv('data.csv', types)
     fields = [generate_field_definition(field, types) for field in data_fields]
 
     try:
