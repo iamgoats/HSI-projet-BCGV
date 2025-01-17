@@ -21,6 +21,17 @@ static int callbackNothing(void) {
 
 static int callbackTurnOnLights(void) {
     printf("[FSM FEUX] Allumer les lumières\n");
+    set_voyant_feux_de_position(&app_data, (voyant_t){true});
+    set_voyant_feux_de_croisement(&app_data, (voyant_t){true});
+    set_voyant_feux_de_route(&app_data, (voyant_t){true});
+    return 0;
+}
+
+static int callbackTurnOffLights(void) {
+    printf("[FSM FEUX] Éteindre les lumières\n");
+    set_voyant_feux_de_position(&app_data, (voyant_t){false});
+    set_voyant_feux_de_croisement(&app_data, (voyant_t){false});
+    set_voyant_feux_de_route(&app_data, (voyant_t){false});
     return 0;
 }
 
@@ -31,11 +42,6 @@ static int callbackHandleAcknowledgment(void) {
 
 static int callbackHandleTimeout(void) {
     printf("[FSM FEUX] Temps supérieur à 1 sec\n");
-    return 0;
-}
-
-static int callbackTurnOffLights(void) {
-    printf("[FSM FEUX] Éteindre les lumières\n");
     return 0;
 }
 
@@ -57,7 +63,7 @@ tTransition trans[] = {
     {ST_INIT, EV_NONE, &callbackTurnOffLights, ST_ETEINTS},
     {ST_ETEINTS, EV_CMD_1, &callbackTurnOnLights, ST_ALLUMES},
     {ST_ETEINTS, EV_CMD_0, &callbackNothing, ST_ETEINTS},
-    {ST_ALLUMES, EV_CMD_0, &callbackNothing, ST_ALLUMES},
+    {ST_ALLUMES, EV_CMD_0, &callbackTurnOffLights, ST_ETEINTS},
     {ST_ALLUMES, EV_ACQUITTEMENT_RECU, &callbackHandleAcknowledgment, ST_ACQUITTES},
     {ST_ALLUMES, EV_ACQUITTEMENT_NR_1, &callbackHandleTimeout, ST_ERREUR},
     {ST_ACQUITTES, EV_CMD_0, &callbackTurnOffLights, ST_ETEINTS},
@@ -69,20 +75,25 @@ tTransition trans[] = {
 #define TRANS_COUNT (sizeof(trans) / sizeof(*trans))
 
 static fsm_state_t state = ST_INIT;
-static t_app_data_t app_data;
+static app_data_t app_data;
 
 /**
  * \brief Décoder une trame UDP et mettre à jour app_data.
  * \param frame : Trame UDP reçue.
  */
-void decode_udp_frame(const uint8_t *frame, t_app_data_t *data) {
+void decode_udp_frame(const uint8_t *frame, app_data_t *data) {
     if (frame == NULL || data == NULL) {
         printf("Erreur : trame ou données nulles\n");
         return;
     }
 
-    data->command = frame[0];
-    data->acquittement = frame[1];
+    set_cmd_feux_de_poition(data, (commande_t){frame[0] & 0x01});
+    set_cmd_feux_de_route(data, (commande_t){frame[0] & 0x02});
+    set_cmd_clignotant_droit(data, (commande_t){frame[0] & 0x04});
+    set_cmd_clignotant_gauche(data, (commande_t){frame[0] & 0x08});
+    set_cmd_warning(data, (commande_t){frame[0] & 0x10});
+    set_activation_essuie_glaces(data, (commande_t){frame[0] & 0x20});
+    set_activation_lave_glace(data, (commande_t){frame[0] & 0x40});
 }
 
 /**
@@ -92,8 +103,7 @@ void decode_udp_frame(const uint8_t *frame, t_app_data_t *data) {
  */
 fsm_event_t get_next_event(fsm_state_t current_state) {
     fsm_event_t event = EV_NONE;
-    uint8_t udpFrame[DRV_UDP_100MS_FRAME_SIZE];
-
+    uint8_t udpFrame[FRAME_SIZE];
 
     // Lire une trame UDP depuis le driver
     int32_t drvFd = drv_open();
@@ -113,14 +123,11 @@ fsm_event_t get_next_event(fsm_state_t current_state) {
     drv_close(drvFd);
 
     /* Déterminer l'événement à partir de app_data */
-    if (current_state == ST_ALLUMES && app_data.acquittement) {
-        return EV_ACQUITTEMENT_RECU;
+    if (current_state == ST_ALLUMES && get_cmd_feux_de_poition(&app_data).value) {
+        return EV_CMD_1;
     }
-
-    if (app_data.command == 0x01) {
-        event = EV_CMD_1;
-    } else if (app_data.command == 0x00) {
-        event = EV_CMD_0;
+    if (!get_cmd_feux_de_poition(&app_data).value) {
+        return EV_CMD_0;
     }
 
     return event;
@@ -146,8 +153,7 @@ void fsm_feux_run(void) {
 
 int main(void) {
     // Initialiser app_data
-    app_data.command = 0;
-    app_data.acquittement = false;
+    init_app_data(&app_data);
 
     while (state != ST_TERM) {
         fsm_feux_run();

@@ -21,7 +21,10 @@ typedef struct {
     fsm_state_t next_state;
 } tTransition;
 
-/* Fonctions de réponse */
+/* Static application data */
+static app_data_t app_data;
+
+/* Callback functions */
 static int callbackNothing(void) {
     printf("Ne rien faire\n");
     return 0;
@@ -29,21 +32,28 @@ static int callbackNothing(void) {
 
 static int callbackTurnoffALL(void) {
     printf("Tout éteints\n");
+    set_activation_essuie_glaces(&app_data, (commande_t){.value = false});
+    set_activation_lave_glace(&app_data, (commande_t){.value = false});
     return 0;
 }
 
 static int callbackTurnOnEG(void) {
     printf("Activer essuie-glace\n");
+    set_activation_essuie_glaces(&app_data, (commande_t){.value = true});
     return 0;
 }
 
 static int callbackTurnOnLGEG(void) {
     printf("Activer lave-glace et essuie-glace\n");
+    set_activation_lave_glace(&app_data, (commande_t){.value = true});
+    set_activation_essuie_glaces(&app_data, (commande_t){.value = true});
     return 0;
 }
 
 static int callbackTimeout(void) {
     printf("Timer EG et LG éteints\n");
+    set_activation_essuie_glaces(&app_data, (commande_t){.value = false});
+    set_activation_lave_glace(&app_data, (commande_t){.value = false});
     return 0;
 }
 
@@ -52,7 +62,7 @@ static int FsmError(void) {
     return -1;
 }
 
-/* Tableau des transitions */
+/* Transition table */
 static tTransition trans[] = {
     { ST_INIT, EV_NONE, &callbackTurnoffALL, ST_TOUS_ETEINTS },
     { ST_TOUS_ETEINTS, EV_EG_1, &callbackTurnOnEG, ST_EG_ACTIVE },
@@ -65,29 +75,12 @@ static tTransition trans[] = {
     { ST_EG_ACTIVE, EV_LG_1, &callbackTurnOnLGEG, ST_LG_EG_ACTIVES },
     { ST_EG_ACTIVE, EV_EG_1, &callbackNothing, ST_EG_ACTIVE },
     { ST_EG_ACTIVE, EV_EG_0, &callbackTurnoffALL, ST_TOUS_ETEINTS },
-
     { ST_ANY, EV_ERR, &FsmError, ST_TERM }
 };
 
 #define TRANS_COUNT (sizeof(trans) / sizeof(*trans))
 
-
 static fsm_state_t state = ST_INIT;
-static t_app_data_t app_data;
-
-/**
- * \brief Décoder une trame UDP et mettre à jour app_data.
- * \param frame : Trame UDP reçue.
- */
-void decode_udp_frame(const uint8_t *frame, t_app_data_t *data) {
-    if (frame == NULL || data == NULL) {
-        printf("Erreur : trame ou données nulles\n");
-        return;
-    }
-
-    data->command = frame[0];
-    data->acquittement = frame[1];
-}
 
 /**
  * \brief Détermine le prochain événement à partir de l'état actuel.
@@ -97,7 +90,6 @@ void decode_udp_frame(const uint8_t *frame, t_app_data_t *data) {
 fsm_event_t get_next_event(fsm_state_t current_state) {
     fsm_event_t event = EV_NONE;
     uint8_t udpFrame[DRV_UDP_100MS_FRAME_SIZE];
-
 
     int32_t drvFd = drv_open();
     if (drvFd < 0) {
@@ -115,12 +107,11 @@ fsm_event_t get_next_event(fsm_state_t current_state) {
 
     drv_close(drvFd);
 
-    /* Déterminer l'événement à partir de app_data */
     switch (current_state) {
         case ST_TOUS_ETEINTS:
-            if (app_data.command == 0x01) {
+            if (get_activation_essuie_glaces(&app_data).value) {
                 event = EV_EG_1;
-            } else if (app_data.command == 0x02) {
+            } else if (get_activation_lave_glace(&app_data).value) {
                 event = EV_LG_1;
             } else {
                 event = EV_EG_0_LG_0;
@@ -128,25 +119,21 @@ fsm_event_t get_next_event(fsm_state_t current_state) {
             break;
 
         case ST_EG_ACTIVE:
-            if (app_data.acquittement) {
-                event = EV_T_SUP_2;
+            if (get_activation_lave_glace(&app_data).value) {
+                event = EV_LG_1;
             } else {
-                event = EV_T_INF_2;
+                event = EV_T_SUP_2;
             }
             break;
 
         case ST_LG_EG_ACTIVES:
-            if (app_data.acquittement) {
+            if (!get_activation_lave_glace(&app_data).value) {
                 event = EV_LG_0;
-            } else {
-                event = EV_LG_1;
             }
             break;
 
         case ST_TIMER_ETEINT:
-            if (app_data.acquittement) {
-                event = EV_EG_0_LG_0;
-            }
+            event = EV_T_INF_2;
             break;
 
         default:
@@ -176,10 +163,11 @@ void fsm_eglg_run(void) {
     }
 }
 
+/**
+ * \brief Point d'entrée principal de la machine à états.
+ */
 int main(void) {
-    // Initialiser app_data
-    app_data.command = 0;
-    app_data.acquittement = false;
+    init_app_data(&app_data);
 
     while (state != ST_TERM) {
         fsm_eglg_run();
