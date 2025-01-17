@@ -1,12 +1,12 @@
-Nom,Genre,Déclaration,Domaine,Commentaire
+Nom,Genre,Declaration,Domaine,Commentaire
 km_t,Atom,uint32_t,"[0, ...]",Kilométrage total 
 vitesse_t,Atom,uint8_t,"[0,255]",Vitesse en km/h
-reservoir_t,Atom,,"[0,40]",Réservoir en L
-commande_t,Enum,"{enum : True, False}","[0,1]",Commande
-trmin_t,Atom,,"[0,10000]",Tour par minutes
-defautChassis_t,Enum,"{enum : Aucun, Pression, Freins}","[0x0, 0x2]",Problème Chassis
-défautMoteur_t,Enum,"{enum : Aucun, Pression, Température, Surchauffe huile}","[0x0, 0x4]",Problème moteur
-défautBatterie_t,Enum,"{enum : Aucun, Déchargé, Panne}","[0x0, 0x2]",Problème batterie
+reservoir_t,Atom,uint8_t,"[0,40]",Réservoir en L
+commande_t,Atom,bool,"[0,1]",Commande
+trmin_t,Atom,uint8_t,"[0,10000]",Tour par minutes
+defautChassis_t,Enum,"Aucun, Pression, Freins","[0x0, 0x2]",Problème Chassis
+défautMoteur_t,Enum,"Aucun, Pression, Température, Surchauffe_huile","[0x0, 0x4]",Problème moteur
+défautBatterie_t,Enum,"Aucun, Déchargé, Panne","[0x0, 0x2]",Problème batterie
 crc8,Atom,uint8_t,"[0,255]",Contrôle de redondance cyclique
-voyant_t,Enum,"{enum : Eteint, Allumé}","[0,1]",Etat des voyants
-idFeux,Enum,"{position, croisement, route, clignotant droit, clignotant gauche}",,
+voyant_t,Atom,bool,"[0,1]",Etat des voyants
+idFeux,Enum,"position, croisement, route, clignotant_droit, clignotant_gauche",,
