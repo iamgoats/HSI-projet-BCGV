@@ -1,50 +1,80 @@
-# Définition des champs de la structure
-fields = [
-    {"name": "kilometrage", "type": "t_kilometrage_t", "comment": "Kilométrage en kilomètres", "bounds": (0, 999999)},
-    {"name": "vitesse", "type": "t_vitesse_t", "comment": "Vitesse en km/h", "bounds": (0, 255)},
-    {"name": "reservoir", "type": "t_reservoir_t", "comment": "Niveau de réservoir en pourcentage", "bounds": (0, 100)},
-    {"name": "tours_minute", "type": "t_tours_minute_t", "comment": "Tours par minute divisés par 10", "bounds": (0, 1000)},
-    {"name": "command", "type": "t_command_t", "comment": "Commande courante", "bounds": (0, 255)},
-    {"name": "acquittement", "type": "t_acquittement_t", "comment": "Indicateur d'acquittement", "bounds": (0, 1)},
-]
+import csv
+from typing import Dict, List
 
-# Génération du fichier C
-header = """/**
- * \\file        app_data_generated.c
- * \\brief       Implémentation générée automatiquement des getters, setters et fonctions UDP.
- * \\author      Généré par un script Python
- */
+def parse_types_csv(filename: str) -> Dict[str, Dict]:
+    """Parse le fichier des types et retourne un dictionnaire des définitions."""
+    types = {}
+    with open(filename, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            domain = row['Domaine'].strip('[]').split(',')[0] if row['Domaine'] else "0"
+            max_val = domain.split('...')[-1].strip() if '...' in domain else domain
+            
+            # Gérer les types énumérés
+            if row['Genre'] == 'Enum':
+                try:
+                    enum_values = eval(row['Déclaration'])
+                    max_val = len(enum_values) - 1
+                except:
+                    max_val = 1  # Valeur par défaut pour les énums
 
-#include "app_data.h"
-#include <stdio.h>
-"""
+            types[row['Nom']] = { 
+                'genre': row['Genre'],
+                'declaration': row['Declaration'] or f'uint8_t',  # Type par défaut
+                'max_value': max_val if isinstance(max_val, int) else 255,
+                'comment': row['Commentaire']
+            }
+    return types
 
-def generate_getter(field):
+def parse_data_csv(filename: str, type_fields) -> List[Dict]:
+    """Parse le fichier de données et retourne une liste des champs."""
+    fields = []
+    with open(filename, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            
+            type = type_fields[row["Type"]]["declaration"]
+            if type in ("uint8_t", "uint32_t", "bool"):
+                type_type = type
+            else:
+                type = str
+            fields.append({
+                'name': row['Nom'].lower().replace(' ', '_').replace('.', ''),
+                'type': type_type,
+                'comment': row['Commentaire'] or row['Nom']
+            })
+    return fields
+
+def generate_field_definition(field: Dict, types: Dict) -> Dict:
+    """Génère la définition complète d'un champ."""
+    type_info = types.get(field['type'], {})
+    return {
+        'name': field['name'],
+        'type': field['type'],
+        'comment': field['comment'],
+        'bounds': (0, type_info.get('max_value', 255))
+    }
+
+def generate_getter(field: Dict) -> str:
+    """Génère le getter pour un champ."""
     return f"""
 /**
  * \\brief   Récupère la valeur de {field['name']}.
  * \\param   data : Pointeur vers la structure applicative.
  * \\return  {field['type']} : Valeur actuelle de {field['name']}.
  */
-{field['type']} get_{field['name']}(const t_app_data_t *data) {{
+{field['type']} get_{field['name']}(const app_data_t *data) {{
     return data->{field['name']};
 }}
 """
 
-def generate_setter(field):
-
-    if field["type"] == "bool" or field["type"] == "t_acquittement_t":
-        bounds_check = f"""
+def generate_setter(field: Dict) -> str:    
+    """Génère le setter pour un champ."""
+    bounds_check = f"""
     if (value > {field['bounds'][1]}) {{
         printf("Erreur : Valeur hors borne pour {field['name']} (%d).\\n", value);
         return -1;
-    }}"""
-    else:
-        bounds_check = f"""
-    if (value > {field['bounds'][1]}) {{
-        printf("Erreur : Valeur hors borne pour {field['name']} (%d).\\n", value);
-        return -1;
-    }}""" if field["bounds"] else ""
+    }}""" if field['bounds'] else ""
 
     return f"""
 /**
@@ -53,14 +83,15 @@ def generate_setter(field):
  * \\param   value : Nouvelle valeur à attribuer.
  * \\return  int : 0 si succès, -1 si erreur.
  */
-int set_{field['name']}(t_app_data_t *data, {field['type']} value) {{
+int set_{field['name']}(app_data_t *data, {field['type']} value) {{
     {bounds_check.strip()}
     data->{field['name']} = value;
     return 0;
 }}
 """
 
-def generate_decode():
+def generate_decode(fields: List[Dict]) -> str:
+    """Génère la fonction de décodage UDP."""
     lines = [f"    data->{field['name']} = frame[{i}];" for i, field in enumerate(fields)]
     return f"""
 /**
@@ -68,111 +99,109 @@ def generate_decode():
  * \\param   frame : Tableau d'octets représentant la trame.
  * \\param   data : Structure applicative à mettre à jour.
  */
-void decode_udp_frame(const uint8_t *frame, t_app_data_t *data) {{
+void decode_udp_frame(const uint8_t *frame, app_data_t *data) {{
 {chr(10).join(lines)}
 }}
 """
+def generate_type_structs(types: Dict) -> str:
+    """Génère les structures et les énumérations des types définis en utilisant les déclarations spécifiées."""
+    structs = []
+    for type_name, details in types.items():
+        type_genre = details['genre']
+        declaration = details['declaration']
+        comment = details['comment']
+        if type_genre.lower() == "enum":
+            try:
+                enum_values = tuple(declaration.split(', '))
+                enum_body = ",\n    ".join(enum_values)
+                structs.append(f"""// Definition de  {type_name}
+typedef enum {{
+    {enum_body}
+}} {type_name};
+""")
+            except Exception as e:
+                structs.append(f"// Error parsing enum for {type_name}: {e}")
 
-def generate_ack():
-    lines = [f"    frame[{i}] = data->{field['name']};" for i, field in enumerate(fields)]
-    return f"""
-/**
- * \\brief   Générer une trame d'acquittement.
- * \\param   frame : Tableau d'octets pour écrire la trame.
- * \\param   data : Structure applicative source.
- */
-void generate_ack_frame(uint8_t *frame, const t_app_data_t *data) {{
-{chr(10).join(lines)}
-}}
-"""
+        elif type_genre.lower() == "atom":
+            # Pour les types atomiques, utiliser la déclaration directement
+            structs.append(f"""// Definition of {type_name}
+typedef struct {{
+    {declaration} value;  // {comment}
+}} {type_name};
+""")
 
-def generate_validation():
-    return """
-/**
- * \\brief   Valider une trame d'acquittement.
- * \\param   ack_frame : Trame d'acquittement reçue.
- * \\param   data : Structure applicative source.
- * \\return  bool : true si la trame est valide, false sinon.
- */
-bool validate_ack_frame(const uint8_t *ack_frame, const t_app_data_t *data) {
-    uint8_t generated_frame[FRAME_SIZE];
-    generate_ack_frame(generated_frame, data);
-    for (int i = 0; i < FRAME_SIZE; i++) {
-        if (ack_frame[i] != generated_frame[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-"""
 
-# Génération du fichier
-output_file = "app_data_generated.c"
-
-try:
-    with open(output_file, "w") as f:
-        print(f"Écriture dans le fichier : {output_file}")
-        f.write(header)
-        for field in fields:
-            f.write(generate_getter(field))
-            f.write("\n")
-            f.write(generate_setter(field))
-            f.write("\n")
-        f.write(generate_decode())
-        f.write("\n")
-        f.write(generate_ack())
-        f.write("\n")
-        f.write(generate_validation())
-    print(f"Fichier généré avec succès : {output_file}")
-except IOError as e:
-    print(f"Erreur lors de la génération du fichier : {e}")
+    return "\n".join(structs)
 
 
 
-header_file_content = """\
-#ifndef APP_DATA_H
+
+def generate_header(fields: List[Dict], types: Dict) -> str:
+    """Génère le contenu du fichier header."""
+    struct_fields = "\n".join([f"    {field['type']} {field['name']}; // {field['comment']}" for field in fields])
+    prototypes = "\n".join([
+        f"{field['type']} get_{field['name']}(const app_data_t *data);\n"
+        f"int set_{field['name']}(app_data_t *data, {field['type']} value);"
+        for field in fields
+    ])
+    
+    type_structs = generate_type_structs(types)
+
+    return f"""#ifndef APP_DATA_H
 #define APP_DATA_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
 /* Définition des types */
-typedef uint32_t t_kilometrage_t;
-typedef uint8_t t_vitesse_t;
-typedef uint8_t t_reservoir_t;
-typedef uint16_t t_tours_minute_t;
-typedef uint8_t t_command_t;
-typedef bool t_acquittement_t;
+{type_structs}
 
 /* Définition de la structure des données */
-typedef struct {
-""" + "".join(
-    [f"    {field['type']} {field['name']}; /**< {field['comment']} */\n" for field in fields]
-) + """} t_app_data_t;
+typedef struct {{
+{struct_fields}
+}} app_data_t;
 
 /* Taille de la trame UDP */
-#define FRAME_SIZE 14
+#define FRAME_SIZE {len(fields)}
 
 /* Prototypes des fonctions */
-void init_app_data(t_app_data_t *data);
-""" + "".join(
-    [f"{field['type']} get_{field['name']}(const t_app_data_t *data);\n"
-     f"int set_{field['name']}(t_app_data_t *data, {field['type']} value);\n"
-     for field in fields]
-) + """\
-void decode_udp_frame(const uint8_t *frame, t_app_data_t *data);
-void generate_ack_frame(uint8_t *frame, const t_app_data_t *data);
-bool validate_ack_frame(const uint8_t *ack_frame, const t_app_data_t *data);
+void init_app_data(app_data_t *data);
+{prototypes}
+void decode_udp_frame(const uint8_t *frame, app_data_t *data);
+void generate_ack_frame(uint8_t *frame, const app_data_t *data);
+bool validate_ack_frame(const uint8_t *ack_frame, const app_data_t *data);
 
 #endif /* APP_DATA_H */
 """
 
-header_output_file = "app_data.h"
+def main():
+    """Fonction principale pour générer les fichiers C et header."""
+    types = parse_types_csv('types.csv')
+    data_fields = parse_data_csv('data.csv', types)
+    fields = [generate_field_definition(field, types) for field in data_fields]
 
-try:
-    with open(header_output_file, "w") as f:
-        print(f"Écriture dans le fichier : {header_output_file}")
-        f.write(header_file_content)
-    print(f"Fichier .h généré avec succès : {header_output_file}")
-except IOError as e:
-    print(f"Erreur lors de la génération du fichier : {e}")
+    try:
+        with open("app_data_generated.c", "w") as f:
+            f.write("""/**
+ * \\file        app_data_generated.c
+ * \\brief       Implémentation générée automatiquement des getters, setters et fonctions UDP.
+ * \\author      Généré par un script Python
+ */
+
+#include "app_data.h"
+#include <stdio.h>
+""")
+            for field in fields:
+                f.write(generate_getter(field))
+                f.write(generate_setter(field))
+            f.write(generate_decode(fields))
+
+        with open("app_data.h", "w") as f:
+            f.write(generate_header(fields, types))
+
+        print("Fichiers générés avec succès!")
+    except IOError as e:
+        print(f"Erreur lors de la génération des fichiers : {e}")
+
+if __name__ == "__main__":
+    main()
