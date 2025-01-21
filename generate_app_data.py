@@ -73,14 +73,14 @@ def generate_getter(field: Dict) -> str:
 
 def generate_setter(field: Dict) -> str:    
     """Génère le setter pour un champ."""
-    # print(type(field['type_in_struct']))
-    bounds_check = ""
-    if (field['type_in_struct'] != 'bool'):
-        bounds_check = f"""
-        if (value > {field['bounds']}) {{
-            printf("Erreur : Valeur hors borne pour {field['name']} (%d).\\n", value);
-            return -1;
-        }}"""
+    # bounds check génère un warning puisque le type de la variable effectue déjà le check
+    # bounds_check = ""
+    # if (field['type_in_struct'] != 'bool'):
+    #     bounds_check = f"""
+    #     if (value > {field['bounds']}) {{
+    #         printf("Erreur : Valeur hors borne pour {field['name']} (%d).\\n", value);
+    #         return -1;
+    #     }}"""
 
     return f"""
 /**
@@ -90,7 +90,6 @@ def generate_setter(field: Dict) -> str:
  * \\return  int : 0 si succès, -1 si erreur.
  */
 int set_{field['name']}(app_data_t *data, {field['type_in_struct']} value) {{
-    {bounds_check.strip()}
     data->{field['name']}.value = value;
     return 0;
 }}
@@ -117,24 +116,25 @@ def generate_type_structs(types: Dict) -> str:
         type_genre = details['genre']
         declaration = details['declaration']
         comment = details['comment']
-        if type_genre.lower() == "enum":
-            try:
-                enum_values = tuple(declaration.split(', '))
-                enum_body = ",\n    ".join(enum_values)
-                structs.append(f"""// Definition de  {type_name}
-typedef enum {type_name} {{
-    {enum_body}
-}} {type_name};
-""")
-            except Exception as e:
-                structs.append(f"// Error parsing enum for {type_name}: {e}")
-
-        # Pour les types atomiques, utiliser la déclaration directement
-        structs.append(f"""// Definition of {type_name}
-typedef struct {type_name}{{
-    {declaration} value;  // {comment}
-}} {type_name};
-""")
+        # La génération d'enum génére des warnings et errors ("redeclaration of enumerator")
+#         if type_genre.lower() == "enum":
+#             try:
+#                 enum_values = tuple(declaration.split(', '))
+#                 enum_body = ",\n    ".join(enum_values)
+#                 structs.append(f"""// Definition de  {type_name}
+# typedef enum {type_name} {{
+#     {enum_body}
+# }} {type_name};
+# """)
+#             except Exception as e:
+#                 structs.append(f"// Error parsing enum for {type_name}: {e}")
+        if type_genre.lower() == "atom":
+            # Pour les types atomiques, utiliser la déclaration directement
+            structs.append(f"""// Definition of {type_name}
+    typedef struct {type_name}{{
+        {declaration} value;  // {comment}
+    }} {type_name};
+    """)
 
 
     return "\n".join(structs)
